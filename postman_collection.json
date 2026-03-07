@@ -129,6 +129,22 @@
           }
         },
         {
+          "name": "Change Password (Auth Required)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"NewStrongPass123!\",\n  \"confirmPassword\": \"NewStrongPass123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/auth/change-password"
+          }
+        },
+        {
           "name": "Refresh Token (cookie required)",
           "request": {
             "method": "POST",

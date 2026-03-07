@@ -164,4 +164,30 @@ export class AuthService {
       refreshToken: tokens.refreshToken,
     };
   }
+
+  async changePassword(
+    email: string,
+    currentPassword: string,
+    newPassword: string
+  ) {
+    const user = await this.userRepo.findUserByEmail(email);
+
+    if (!user) {
+      throw new apiError(Errors.NotFound.code, "User not found");
+    }
+
+    const isCurrentPasswordValid = bcrypt.compareSync(
+      currentPassword,
+      user.password
+    );
+
+    if (!isCurrentPasswordValid) {
+      throw new apiError(Errors.Unauthorized.code, "Current password is incorrect");
+    }
+
+    const hashedPassword = await this.hashUtils.hashPassword(newPassword);
+    await this.userRepo.updateUserPassword(user._id, hashedPassword);
+
+    return { success: true, message: "Password changed successfully" };
+  }
 }

@@ -12,4 +12,9 @@ export const loginUserSchema=z.object({
     password:z.string()
 })
 
+export const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(1),
+    confirmPassword: z.string().min(1),
+});
 

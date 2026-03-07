@@ -148,4 +148,27 @@ export class AuthController {
       });
     }
   );
+
+  changePassword = asyncHandler(
+    async (req: Request, res: Response, _next: NextFunction) => {
+      const userEmail = req.user?.email;
+      const { currentPassword, newPassword, confirmPassword } = req.body;
+
+      if (!userEmail) {
+        throw new apiError(Errors.Unauthorized.code, "Unauthorized");
+      }
+
+      if (newPassword !== confirmPassword) {
+        throw new apiError(HttpCodes.BadRequest, "New password and confirm password do not match");
+      }
+
+      const result = await this.authService.changePassword(
+        userEmail,
+        currentPassword,
+        newPassword
+      );
+
+      return res.status(HttpCodes.Ok).json(result);
+    }
+  );
 }
