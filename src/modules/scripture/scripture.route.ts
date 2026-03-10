@@ -14,6 +14,8 @@ scriptureRoute.post(
 );
 
 scriptureRoute.get("/", scriptureController.getAllScriptures);
+scriptureRoute.get("/stats", scriptureController.getScriptureStats);
+scriptureRoute.get("/recent", scriptureController.getRecentScriptures);
 scriptureRoute.get("/:id", scriptureController.getScriptureById);
 
 scriptureRoute.patch(

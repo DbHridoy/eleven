@@ -31,6 +31,30 @@ export class ScriptureController {
     }
   );
 
+  getScriptureStats = asyncHandler(
+    async (_req: Request, res: Response, _next: NextFunction) => {
+      const stats = await this.scriptureService.getScriptureStats();
+
+      res.status(HttpCodes.Ok).json({
+        success: true,
+        message: "Scripture stats fetched successfully",
+        data: stats,
+      });
+    }
+  );
+
+  getRecentScriptures = asyncHandler(
+    async (_req: Request, res: Response, _next: NextFunction) => {
+      const scriptures = await this.scriptureService.getRecentScriptures();
+
+      res.status(HttpCodes.Ok).json({
+        success: true,
+        message: "Recent scriptures fetched successfully",
+        data: scriptures,
+      });
+    }
+  );
+
   getScriptureById = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
       const scripture = await this.scriptureService.getScriptureById(req.params.id);

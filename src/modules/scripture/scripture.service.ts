@@ -71,6 +71,14 @@ export class ScriptureService {
     return await this.scriptureRepo.findAllScriptures(sanitizedQuery);
   };
 
+  getScriptureStats = async () => {
+    return await this.scriptureRepo.getScriptureStats();
+  };
+
+  getRecentScriptures = async () => {
+    return await this.scriptureRepo.getRecentScriptures(5);
+  };
+
   getScriptureById = async (id: string) => {
     const scripture = await this.scriptureRepo.findScriptureById(id);
 

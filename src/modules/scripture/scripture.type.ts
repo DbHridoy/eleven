@@ -14,3 +14,9 @@ export type ScriptureListQuery = {
   mode?: string;
   timeOfDay?: string;
 };
+
+export type ScriptureStats = {
+  totalScriptures: number;
+  recentlyAdded: number;
+  lastUpdatedHoursAgo: number | null;
+};

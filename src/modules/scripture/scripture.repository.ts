@@ -3,6 +3,7 @@ import { buildDynamicSearch } from "../../utils/dynamic-search-utils";
 import {
   CreateScriptureType,
   ScriptureListQuery,
+  ScriptureStats,
   UpdateScriptureType,
 } from "./scripture.type";
 
@@ -49,5 +50,35 @@ export class ScriptureRepository {
 
   deleteScriptureById = async (id: string) => {
     return await Scripture.findByIdAndDelete(id).lean();
+  };
+
+  getScriptureStats = async (): Promise<ScriptureStats> => {
+    const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const [totalScriptures, recentlyAdded, latestScripture] = await Promise.all([
+      Scripture.countDocuments(),
+      Scripture.countDocuments({ createdAt: { $gte: last24Hours } }),
+      Scripture.findOne().sort({ createdAt: -1 }).select("createdAt").lean(),
+    ]);
+
+    const lastUpdatedHoursAgo = latestScripture?.createdAt
+      ? Math.floor(
+          (Date.now() - new Date(latestScripture.createdAt).getTime()) /
+            (60 * 60 * 1000)
+        )
+      : null;
+
+    return {
+      totalScriptures,
+      recentlyAdded,
+      lastUpdatedHoursAgo,
+    };
+  };
+
+  getRecentScriptures = async (limit = 5) => {
+    return await Scripture.find()
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .lean();
   };
 }
