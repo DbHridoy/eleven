@@ -243,6 +243,26 @@
           }
         },
         {
+          "name": "Get Scripture Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/scriptures/stats"
+          }
+        },
+        {
+          "name": "Get Recent Scriptures",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/scriptures/recent"
+          }
+        },
+        {
           "name": "Get Scripture By ID",
           "request": {
             "method": "GET",
