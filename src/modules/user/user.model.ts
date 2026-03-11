@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+import { InferSchemaType, Schema, model } from "mongoose";
+
+const USER_ROLES = ["Production Manager", "Sales Rep", "Admin"] as const;
 
 const userSchema = new Schema(
   {
@@ -15,10 +17,13 @@ const userSchema = new Schema(
     profileImage: {
       type: String,
     },
+    phoneNumber: {
+      type: String,
+    },
     role: {
       type: String,
       required: true,
-      enum: ["Admin"],
+      enum: USER_ROLES,
     },
     password: {
       type: String,
@@ -32,8 +37,9 @@ const userSchema = new Schema(
   }
 );
 
+export type UserDocument = InferSchemaType<typeof userSchema>;
+export const userRoles = [...USER_ROLES];
 
-
-const User = model("User", userSchema);
+const User = model<UserDocument>("User", userSchema);
 
 export default User;

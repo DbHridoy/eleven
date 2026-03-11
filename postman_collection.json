@@ -9,10 +9,14 @@
     { "key": "baseUrl", "value": "{{rootUrl}}/api/v1" },
     { "key": "accessToken", "value": "" },
     { "key": "refreshToken", "value": "" },
+    { "key": "fullName", "value": "Admin User" },
     { "key": "email", "value": "admin@example.com" },
     { "key": "password", "value": "StrongPass123!" },
-    { "key": "scriptureId", "value": "" },
-    { "key": "aboutId", "value": "" }
+    { "key": "newPassword", "value": "NewStrongPass123!" },
+    { "key": "phoneNumber", "value": "+8801700000000" },
+    { "key": "userRole", "value": "Admin" },
+    { "key": "profileImagePath", "value": "" },
+    { "key": "scriptureId", "value": "" }
   ],
   "item": [
     {
@@ -48,7 +52,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Admin User\",\n  \"email\": \"{{email}}\",\n  \"role\": \"Admin\",\n  \"password\": \"{{password}}\"\n}",
+              "raw": "{\n  \"fullName\": \"{{fullName}}\",\n  \"email\": \"{{email}}\",\n  \"role\": \"{{userRole}}\",\n  \"password\": \"{{password}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": "{{baseUrl}}/auth/register"
@@ -122,7 +126,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"newPassword\": \"NewStrongPass123!\",\n  \"confirmPassword\": \"NewStrongPass123!\"\n}",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"newPassword\": \"{{newPassword}}\",\n  \"confirmPassword\": \"{{newPassword}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": "{{baseUrl}}/auth/set-new-password"
@@ -138,7 +142,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"NewStrongPass123!\",\n  \"confirmPassword\": \"NewStrongPass123!\"\n}",
+              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"{{newPassword}}\",\n  \"confirmPassword\": \"{{newPassword}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": "{{baseUrl}}/auth/change-password"
@@ -188,12 +192,14 @@
             "header": [
               { "key": "Authorization", "value": "Bearer {{accessToken}}" }
             ],
+            "description": "Send as form-data. Leave `profileImage` empty if you only want to update text fields.",
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "fullName", "value": "Updated Admin User", "type": "text" },
-                { "key": "password", "value": "AnotherStrongPass123!", "type": "text" },
-                { "key": "profileImage", "type": "file", "src": "" }
+                { "key": "fullName", "value": "{{fullName}}", "type": "text" },
+                { "key": "phoneNumber", "value": "{{phoneNumber}}", "type": "text" },
+                { "key": "password", "value": "{{newPassword}}", "type": "text" },
+                { "key": "profileImage", "type": "file", "src": "{{profileImagePath}}" }
               ]
             },
             "url": "{{baseUrl}}/users/me"
@@ -304,19 +310,7 @@
       "name": "Common About (Auth Required)",
       "item": [
         {
-          "name": "Create About",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json?.data?._id) pm.collectionVariables.set('aboutId', json.data._id);"
-                ]
-              }
-            }
-          ],
+          "name": "Create Or Update About",
           "request": {
             "method": "POST",
             "header": [
@@ -332,23 +326,13 @@
           }
         },
         {
-          "name": "Get All About",
+          "name": "Get About",
           "request": {
             "method": "GET",
             "header": [
               { "key": "Authorization", "value": "Bearer {{accessToken}}" }
             ],
             "url": "{{baseUrl}}/common/about"
-          }
-        },
-        {
-          "name": "Get About By ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
-            ],
-            "url": "{{baseUrl}}/common/about/{{aboutId}}"
           }
         },
         {
@@ -364,17 +348,7 @@
               "raw": "{\n  \"about\": \"Updated about content.\"\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "url": "{{baseUrl}}/common/about/{{aboutId}}"
-          }
-        },
-        {
-          "name": "Delete About",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
-            ],
-            "url": "{{baseUrl}}/common/about/{{aboutId}}"
+            "url": "{{baseUrl}}/common/about"
           }
         }
       ]

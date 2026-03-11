@@ -9,36 +9,12 @@ export class CommonService {
     _productionManagerRepo?: unknown
   ) {}
 
-  createAbout = async (body: AboutPayload) => {
-    return await this.commonRepo.createAbout(body);
+  upsertAbout = async (body: Partial<AboutPayload>) => {
+    return await this.commonRepo.upsertAbout(body);
   };
 
-  getAllAbout = async () => {
-    return await this.commonRepo.findAllAbout();
-  };
-
-  getAboutById = async (id: string) => {
-    const about = await this.commonRepo.findAboutById(id);
-
-    if (!about) {
-      throw new apiError(Errors.NotFound.code, "About not found");
-    }
-
-    return about;
-  };
-
-  updateAbout = async (id: string, body: Partial<AboutPayload>) => {
-    const about = await this.commonRepo.updateAboutById(id, body);
-
-    if (!about) {
-      throw new apiError(Errors.NotFound.code, "About not found");
-    }
-
-    return about;
-  };
-
-  deleteAbout = async (id: string) => {
-    const about = await this.commonRepo.deleteAboutById(id);
+  getAbout = async () => {
+    const about = await this.commonRepo.findAbout();
 
     if (!about) {
       throw new apiError(Errors.NotFound.code, "About not found");

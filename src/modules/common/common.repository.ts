@@ -5,23 +5,44 @@ export interface AboutPayload {
 }
 
 export class CommonRepository {
-  createAbout = async (body: AboutPayload) => {
-    return await About.create(body);
+  private findSingletonQuery = () => {
+    return About.findOne({ singletonKey: "default" }).sort({ createdAt: 1 });
   };
 
-  findAllAbout = async () => {
-    return await About.find().sort({ createdAt: -1 }).lean();
+  private findFallbackQuery = () => {
+    return About.findOne().sort({ createdAt: 1 });
   };
 
-  findAboutById = async (id: string) => {
-    return await About.findById(id).lean();
+  private findSingletonDocument = async () => {
+    return await this.findSingletonQuery().orFail().catch(async () => {
+      return await this.findFallbackQuery();
+    });
   };
 
-  updateAboutById = async (id: string, body: Partial<AboutPayload>) => {
-    return await About.findByIdAndUpdate(id, body, { new: true }).lean();
+  upsertAbout = async (body: Partial<AboutPayload>) => {
+    const existingAbout = await this.findSingletonDocument();
+
+    if (existingAbout) {
+      return await About.findByIdAndUpdate(
+        existingAbout._id,
+        { ...body, singletonKey: "default" },
+        { new: true }
+      ).lean();
+    }
+
+    return await About.create({
+      singletonKey: "default",
+      about: body.about ?? "",
+    });
   };
 
-  deleteAboutById = async (id: string) => {
-    return await About.findByIdAndDelete(id).lean();
+  findAbout = async () => {
+    const singletonAbout = await this.findSingletonQuery().lean();
+
+    if (singletonAbout) {
+      return singletonAbout;
+    }
+
+    return await this.findFallbackQuery().lean();
   };
 }

@@ -24,6 +24,11 @@ const envSchema = z.object({
 
   ADMIN_EMAIL: z.string().email("Admin email must be valid"),
   ADMIN_PASSWORD: z.string().min(1, "Admin password required"),
+
+  AWS_ACCESS_KEY: z.string().min(1, "AWS access key required"),
+  AWS_SECRET_KEY: z.string().min(1, "AWS secret key required"),
+  S3_BUCKET_NAME: z.string().min(1, "S3 bucket name required"),
+  S3_BUCKET_REGION: z.string().min(1, "S3 bucket region required"),
 });
 
 export const env = envSchema.parse(process.env);

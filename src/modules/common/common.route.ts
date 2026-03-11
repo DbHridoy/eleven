@@ -5,10 +5,8 @@ const commonRoute = Router();
 
 commonRoute.use(authMiddleware.authenticate);
 
-commonRoute.post("/about", commonController.createAbout);
-commonRoute.get("/about", commonController.getAllAbout);
-commonRoute.get("/about/:id", commonController.getAboutById);
-commonRoute.patch("/about/:id", commonController.updateAbout);
-commonRoute.delete("/about/:id", commonController.deleteAbout);
+commonRoute.get("/about", commonController.getAbout);
+commonRoute.post("/about", commonController.upsertAbout);
+commonRoute.patch("/about", commonController.upsertAbout);
 
 export default commonRoute;

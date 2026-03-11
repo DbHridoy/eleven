@@ -13,11 +13,11 @@ userRoute.get(
 );
 userRoute.patch(
   "/me",
-  validate(UpdateUserSchemaForOtherRoles),
   uploadFile({
     fieldName: "profileImage",
     uploadType: "single",
   }),
+  validate(UpdateUserSchemaForOtherRoles),
   userController.updateMyProfile
 );
 export default userRoute;

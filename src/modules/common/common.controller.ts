@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpCodes } from "../../constants/status-codes";
 import { asyncHandler } from "../../utils/async-handler";
-import { TypedRequestBody, TypedRequestParams } from "../../types/request.type";
+import { TypedRequestBody } from "../../types/request.type";
 import { CommonService } from "./common.service";
 import { AboutPayload, CommonRepository } from "./common.repository";
 
@@ -11,57 +11,13 @@ export class CommonController {
     _commonRepository?: CommonRepository
   ) {}
 
-  createAbout = asyncHandler(
+  upsertAbout = asyncHandler(
     async (
-      req: TypedRequestBody<AboutPayload>,
+      req: TypedRequestBody<Partial<AboutPayload>>,
       res: Response,
       _next: NextFunction
     ) => {
-      const about = await this.commonService.createAbout(req.body);
-
-      res.status(HttpCodes.Created).json({
-        success: true,
-        message: "About created successfully",
-        data: about,
-      });
-    }
-  );
-
-  getAllAbout = asyncHandler(
-    async (_req: Request, res: Response, _next: NextFunction) => {
-      const about = await this.commonService.getAllAbout();
-
-      res.status(HttpCodes.Ok).json({
-        success: true,
-        message: "About fetched successfully",
-        data: about,
-      });
-    }
-  );
-
-  getAboutById = asyncHandler(
-    async (
-      req: TypedRequestParams<{ id: string }>,
-      res: Response,
-      _next: NextFunction
-    ) => {
-      const about = await this.commonService.getAboutById(req.params.id);
-
-      res.status(HttpCodes.Ok).json({
-        success: true,
-        message: "About fetched successfully",
-        data: about,
-      });
-    }
-  );
-
-  updateAbout = asyncHandler(
-    async (
-      req: TypedRequestParams<{ id: string }, Partial<AboutPayload>>,
-      res: Response,
-      _next: NextFunction
-    ) => {
-      const about = await this.commonService.updateAbout(req.params.id, req.body);
+      const about = await this.commonService.upsertAbout(req.body);
 
       res.status(HttpCodes.Ok).json({
         success: true,
@@ -71,17 +27,13 @@ export class CommonController {
     }
   );
 
-  deleteAbout = asyncHandler(
-    async (
-      req: TypedRequestParams<{ id: string }>,
-      res: Response,
-      _next: NextFunction
-    ) => {
-      const about = await this.commonService.deleteAbout(req.params.id);
+  getAbout = asyncHandler(
+    async (_req: Request, res: Response, _next: NextFunction) => {
+      const about = await this.commonService.getAbout();
 
       res.status(HttpCodes.Ok).json({
         success: true,
-        message: "About deleted successfully",
+        message: "About fetched successfully",
         data: about,
       });
     }
