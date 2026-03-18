@@ -5,11 +5,11 @@ import { createScriptureSchema, updateScriptureSchema } from "./scripture.schema
 
 const scriptureRoute = Router();
 
-scriptureRoute.use(authMiddleware.authenticate);
 
 scriptureRoute.post(
   "/",
   validate(createScriptureSchema),
+  authMiddleware.authenticate,
   scriptureController.createScripture
 );
 
