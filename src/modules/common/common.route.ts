@@ -3,8 +3,8 @@ import { authMiddleware, commonController } from "../../container";
 
 const commonRoute = Router();
 
-commonRoute.get("/about",authMiddleware.authenticate, commonController.getAbout);
-commonRoute.post("/about", commonController.upsertAbout);
-commonRoute.patch("/about", commonController.upsertAbout);
+commonRoute.get("/about", commonController.getAbout);
+commonRoute.post("/about", authMiddleware.authenticate, commonController.upsertAbout);
+commonRoute.patch("/about", authMiddleware.authenticate, commonController.upsertAbout);
 
 export default commonRoute;
